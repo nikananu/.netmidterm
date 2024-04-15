@@ -1,19 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Reddit;
 using Reddit.Mapper;
+using Reddit.Repositories;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
-{
-    options.SuppressModelStateInvalidFilter = true; 
-}).AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,7 +30,7 @@ builder.Services.AddCors(options =>
                                  .AllowAnyHeader());
 });
 builder.Services.AddSingleton<IMapper, Mapper>();
-
+builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 
 var app = builder.Build();
 
@@ -43,6 +42,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseCors();
 app.UseAuthorization();
 
