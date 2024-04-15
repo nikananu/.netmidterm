@@ -8,6 +8,6 @@ namespace Reddit.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Name;
+        
     }
 }
